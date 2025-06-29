@@ -3,75 +3,72 @@ const { body, param, validationResult } = require('express-validator');
 const router = express.Router();
 
 let items = [];
-let idCounter = 1;
+let nextId = 1;
 
-const handleErrors = (req, res) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
-  }
-};
-
+// GET /items - Retrieve all items
 router.get('/', (req, res) => {
   res.json(items);
 });
 
-router.get('/:id', [
-  param('id').isInt({ min: 1 }).withMessage('ID must be a positive integer')
-], (req, res) => {
-  const error = handleErrors(req, res);
-  if (error) return error;
-
+// GET /items/:id - Retrieve single item
+router.get('/:id', [param('id').isInt()], (req, res) => {
   const id = parseInt(req.params.id);
   const item = items.find(i => i.id === id);
-  if (!item) return res.status(404).json({ error: `Item with ID ${id} not found` });
-
+  if (!item) return res.status(404).json({ error: 'Item not found' });
   res.json(item);
 });
 
-router.post('/', [
-  body('name').isString().notEmpty().withMessage('Name is required'),
-  body('description').isString().notEmpty().withMessage('Description is required')
-], (req, res) => {
-  const error = handleErrors(req, res);
-  if (error) return error;
+// POST /items - Create new item
+router.post(
+  '/',
+  [
+    body('name').notEmpty().withMessage('Name is required'),
+    body('description').notEmpty().withMessage('Description is required')
+  ],
+  (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
 
-  const { name, description } = req.body;
-  const newItem = { id: idCounter++, name, description };
-  items.push(newItem);
-  res.status(201).json(newItem);
-});
+    const item = {
+      id: nextId++,
+      name: req.body.name,
+      description: req.body.description
+    };
+    items.push(item);
+    res.status(201).json(item);
+  }
+);
 
-router.put('/:id', [
-  param('id').isInt({ min: 1 }).withMessage('ID must be a positive integer'),
-  body('name').isString().notEmpty().withMessage('Name is required'),
-  body('description').isString().notEmpty().withMessage('Description is required')
-], (req, res) => {
-  const error = handleErrors(req, res);
-  if (error) return error;
+// PUT /items/:id - Update an item
+router.put(
+  '/:id',
+  [
+    param('id').isInt(),
+    body('name').notEmpty().withMessage('Name is required'),
+    body('description').notEmpty().withMessage('Description is required')
+  ],
+  (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
 
-  const id = parseInt(req.params.id);
-  const item = items.find(i => i.id === id);
-  if (!item) return res.status(404).json({ error: `Item with ID ${id} not found` });
+    const id = parseInt(req.params.id);
+    const item = items.find(i => i.id === id);
+    if (!item) return res.status(404).json({ error: 'Item not found' });
 
-  item.name = req.body.name;
-  item.description = req.body.description;
-  res.json(item);
-});
+    item.name = req.body.name;
+    item.description = req.body.description;
+    res.json(item);
+  }
+);
 
-router.delete('/:id', [
-  param('id').isInt({ min: 1 }).withMessage('ID must be a positive integer')
-], (req, res) => {
-  const error = handleErrors(req, res);
-  if (error) return error;
-
+// DELETE /items/:id - Delete an item
+router.delete('/:id', [param('id').isInt()], (req, res) => {
   const id = parseInt(req.params.id);
   const index = items.findIndex(i => i.id === id);
-  if (index === -1) return res.status(404).json({ error: `Item with ID ${id} not found` });
+  if (index === -1) return res.status(404).json({ error: 'Item not found' });
 
-  const deleted = items.splice(index, 1);
-  res.json({ message: 'Item deleted', item: deleted[0] });
+  items.splice(index, 1);
+  res.json({ message: 'Item deleted' });
 });
 
 module.exports = router;
-

@@ -1,0 +1,134 @@
+{
+  "info": {
+    "_postman_id": "simple-express-api",
+    "name": "Simple Express API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "GET Root",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "http://localhost:3000/",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            ""
+          ]
+        }
+      }
+    },
+    {
+      "name": "POST Create Item",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Laptop\",\n  \"description\": \"A powerful work machine\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:3000/items",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "items"
+          ]
+        }
+      }
+    },
+    {
+      "name": "GET All Items",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "http://localhost:3000/items",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "items"
+          ]
+        }
+      }
+    },
+    {
+      "name": "GET Item by ID",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "http://localhost:3000/items/1",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "items",
+            "1"
+          ]
+        }
+      }
+    },
+    {
+      "name": "PUT Update Item",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Updated Laptop\",\n  \"description\": \"Now upgraded to 32GB RAM\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:3000/items/1",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "items",
+            "1"
+          ]
+        }
+      }
+    },
+    {
+      "name": "DELETE Item",
+      "request": {
+        "method": "DELETE",
+        "url": {
+          "raw": "http://localhost:3000/items/1",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "items",
+            "1"
+          ]
+        }
+      }
+    }
+  ]
+}
